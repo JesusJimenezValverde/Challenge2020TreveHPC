@@ -105,9 +105,9 @@ int main(int argc, char** argv){
 	//TO DO: compute previous and next processes
 
 	previous = ((myRank - 1)+p)%p;
-  	next     = (myRank + 1)%p);
-  	source   = ( ((p-1)/2) + myRank)%p;
-  	dest     = ((p+1)/2) + myRank)%p;
+  	next     = (myRank + 1)%p;
+  	source   = (((p-1)/2) + myRank)%p;
+  	dest     = (((p+1)/2) + myRank)%p;
 
 	number = n;
 	maxNumber = n;
@@ -152,7 +152,7 @@ int main(int argc, char** argv){
 		}
 	}
 
-
+	
 	start_time = MPI_Wtime();
 
 	// executing iterations
@@ -165,7 +165,7 @@ int main(int argc, char** argv){
 		//TO DO: sending the local particles to the next processor, receiving the incoming foreign particle set and update both of them
 	
 		MPI_Send(locals, sizeof(struct particle)*n, MPI_BYTE, next, tag, MPI_COMM_WORLD);
-   		MPI_Recv(foreigners, sizeof(struct particle)*n, MPI_BYTE, previous, tag, MPI_COMM_WORLD);
+   		MPI_Recv(foreigners, sizeof(struct particle)*n, MPI_BYTE, previous, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     
 		evolve(locals, foreigners, number, foreignNumber);
 	
@@ -174,7 +174,7 @@ int main(int argc, char** argv){
     		for (size_t i = 0; i < ((p-3)/2); i++)
 		{
 				MPI_Send(foreigners, sizeof(struct particle)*n, MPI_BYTE, next, tag, MPI_COMM_WORLD);
-    				MPI_Recv(foreigners, 13*8, MPI_BYTE, previous, tag, MPI_COMM_WORLD);
+    				MPI_Recv(foreigners, sizeof(struct particle)*n, MPI_BYTE, previous, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 				evolve(locals, foreigners, number, foreignNumber);
 		}
 
@@ -182,7 +182,7 @@ int main(int argc, char** argv){
 		MPI_Send(foreigners, sizeof(struct particle)*n, MPI_BYTE, dest, TAG, MPI_COMM_WORLD);
 
 		//TO DO: receiving the incoming particles and merging them with the local set, interacting the local set
-		MPI_Recv(foreigners, sizeof(struct particle)*n, MPI_BYTE, source, tag, MPI_COMM_WORLD);
+		MPI_Recv(foreigners, sizeof(struct particle)*n, MPI_BYTE, source, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 	
 		merge(locals,foreigners,number);
 		evolve(locals,locals,number,number);
@@ -411,4 +411,3 @@ void cleanForces(struct particle *shared, int limit){
 		shared[j].fz = 0.0;
 	}
 }
-
