@@ -174,15 +174,7 @@ int main(int argc, char** argv){
     		for (size_t i = 0; i < ((p-3)/2); i++)
 		{
 				MPI_Send(foreigners, sizeof(struct particle)*n, MPI_BYTE, next, tag, MPI_COMM_WORLD);
-<<<<<<< HEAD:cenatMD.c
     				MPI_Recv(foreigners, sizeof(struct particle)*n, MPI_BYTE, previous, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-=======
-<<<<<<< HEAD:cenatMD.c
-    				MPI_Recv(foreigners, sizeof(struct particle)*n, MPI_BYTE, previous, tag, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-=======
-    				MPI_Recv(foreigners, sizeof(struct particle)*n, MPI_BYTE, previous, tag, MPI_COMM_WORLD);
->>>>>>> 5608e5d9015d276f875c959d2c270ca901d007c5:Challenge2020_cenatMD.c
->>>>>>> f782482bcf1fa12afa96a1162ad1d20c20848b97:cenatMD.c
 				evolve(locals, foreigners, number, foreignNumber);
 		}
 
